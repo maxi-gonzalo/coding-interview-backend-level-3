@@ -1,0 +1,26 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    ports:
+      - 27020:27017
+    volumes:
+      - dataDbMongo:/data/db
+
+  node-app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=$ENVIRONMENT
+      - SERVER_PORT=$SERVER_PORT
+      - MONGO_URI=mongodb://mongodb:27017/test-db
+    ports:
+      - 9000:9000
+    depends_on:
+      - mongodb
+
+volumes:
+  dataDbMongo:

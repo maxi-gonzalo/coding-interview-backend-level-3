@@ -1,8 +1,12 @@
-import { initializeServer, startServer } from "./server"
+import http from 'http';
+import MongoConfiguration from './config/database/mongo/mongoConfiguration';
+import app from './app';
 
-process.on('unhandledRejection', (err) => {
-    console.error(err)
-    process.exit(1)
-})
+// MongoDB Connection
+const mongo: MongoConfiguration = new MongoConfiguration();
+mongo.connectDB();
 
-await startServer()
+const server = http.createServer(app);
+server.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server up and running on port ${process.env.SERVER_PORT}`);
+});
